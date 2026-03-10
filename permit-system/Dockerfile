@@ -1,4 +1,4 @@
-# Stage 1: Build the Java application
+# Stage 1: Build the application using Maven
 FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
 COPY . .
