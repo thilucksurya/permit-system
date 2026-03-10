@@ -44,7 +44,7 @@ public class DeclarationController {
 
         Declaration savedDeclaration = repository.save(declaration);
 
-        return ResponseEntity.ok(savedDeclaration);
+        return declarationRepository.save(newDeclaration);
     }
 
     // 4. Get last job number for sequence generation
@@ -58,4 +58,5 @@ public class DeclarationController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.noContent().build());
     }
+
 }
