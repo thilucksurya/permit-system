@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeWeb™ Live - Declaration Details</title>
+    <link rel="stylesheet" href="css/style.css">
+    <title>TradeWeb™ Live - Sign In</title>
+    <style>
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .app-logo {
+            max-width: 250px;
+            height: auto;
+        }
+    </style>
+
+
+</head>
+<body>
+
+
+    <nav class="top-nav">
+        <div class="logo-area">
+            <span class="brand">TradeWeb™ Live</span>
+        </div>
+        <div class="user-area">
+            <button onclick="window.location.href='index.html'" class="btn-back"><-Back to Home</button>
+        </div>
+    </nav>
+
+    <main class="form-wrapper">
+        <div class="form-header-main">
+    <div class="header-left">
+        <h2>Permit Declaration: <span id="display-job-no">Generating...</span></h2>
+    </div>
+
+    <div class="header-right">
+        <button class="btn-draft" onclick="saveDeclaration('draft')">Save Draft</button>
+
+        <button class="btn-pmt" onclick="saveDeclaration('pmt')">Submit PMT</button>
+    </div>
+</div>
+
+        <section class="form-section">
+            <div class="section-title">General Information</div>
+            <div class="input-grid">
+                <div class="field">
+                    <label>Cargo Pack Type</label>
+                    <select id="cargo_type">
+                        <option value="Container">Container</option>
+                        <option value="Non-Container">Non-Container</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Transport Mode</label>
+                    <select id="transport_mode">
+                        <option value="Air">Air</option>
+                        <option value="Sea">Sea</option>
+                        <option value="Road">Road</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label id="party-label">Party Name</label>
+                    <input type="text" id="party_name" placeholder="Enter name">
+                </div>
+                <div class="field">
+                    <label id="date-label">Event Date</label>
+                    <input type="date" id="event_date">
+                </div>
+                <div class="field">
+                    <label id="port-label">Moment</label>
+                    <input type="text" id="port_name">
+                </div>
+                <div class="field">
+                    <label>License </label>
+                    <input type="text" id="license" placeholder="License No.">
+                </div>
+
+                 <div class="field">
+                    <label id="outer pack">Outer Pack (PKG)</label>
+                    <input type="number" id="outer-pack">
+                </div>
+                <div class="field">
+                    <label id="gross weight">Gross weight (KGM)</label>
+                    <input type="number" id="gross-weight">
+                 </div>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <div class="section-title">Item Details (Item Page)</div>
+            <div class="table-container">
+                <table id="items-table">
+                    <thead>
+                        <tr>
+                            <th>HS Code</th>
+                            <th>Description</th>
+                            <th>Origin</th>
+                            <th>Qty</th>
+                            <th>Amount(USD)</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="permit_items-body">
+
+                        <tr>
+                        <td><input type="text" class="item-hs"></td>
+                        <td><input type="text" class="item-desc"></td>
+                        <td><input type="text" class="item-origin"></td>
+                        <td><input type="number" class="item-qty"></td>
+                        <td><input type="number" class="item-amt"></td>
+                        </tr>
+
+                        <tr>
+                        <td><input type="text" class="item-hs"></td>
+                        <td><input type="text" class="item-desc"></td>
+                        <td><input type="text" class="item-origin"></td>
+                        <td><input type="number" class="item-qty"></td>
+                        <td><input type="text" class="item-amt"></td>
+                        </tr>
+
+
+</tbody>
+                </table>
+            </div>
+        </section>
+
+
+
+        <section class="form-section">
+            <div class="section-title">Remarks</div>
+            <textarea id="remarks" rows="4" placeholder="Input name and other information..."></textarea>
+        </section>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/specific.js"></script>
+</body>
+</html>

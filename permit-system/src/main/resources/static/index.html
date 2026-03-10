@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TradeWeb™ Live - Home</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+    <title>TradeWeb™ Live - Sign In</title>
+    <style>
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .app-logo {
+            max-width: 250px;
+            height: auto;
+        }
+    </style>
+
+
+
+</head>
+
+<body>
+
+
+<header class="main-header">
+
+    <div class="logo-section">
+        <span class="brand-name">TradeWeb™ Live</span>
+    </div>
+
+    <div class="user-controls">
+        <span>User: <strong id="display-user">demo</strong></span>
+        <button onclick="logout()" class="logout-btn">Logout</button>
+    </div>
+
+</header>
+
+<div class="container">
+
+    <div class="dashboard-header">
+        <h2>Permit Declarations</h2>
+
+        <button class="new-btn" onclick="window.location.href='specific.html'">
+            + New Declaration
+        </button>
+
+    </div>
+
+    <section class="search-box">
+
+        <div class="box-header">Search Criteria</div>
+
+        <div class="search-form">
+
+            <div class="form-row">
+                <div class="input-group">
+
+                    <label>Job No:</label>
+
+                    <input type="text" id="search-job" placeholder="YYYY-MM-DD-###">
+
+                </div>
+            </div>
+
+            <div class="button-row">
+                <button class="search-btn" onclick="fetchDeclarations()">SEARCH</button>
+                <button class="clear-btn" onclick="resetFilters()">CLEAR</button>
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="result-box">
+
+        <div class="box-header">Search Result</div>
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+                <tr>
+                    <th>Job No</th>
+                    <th>Party Name</th>
+                    <th>Transport Mode</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+
+                <tbody id="table-body">
+                </tbody>
+
+            </table>
+
+        </div>
+    </section>
+
+</div>
+
+
+<script src="js/app.js"></script>
+
+<script>
+
+    /* Load data when page opens */
+
+</script>
+
+</body>
+</html>
