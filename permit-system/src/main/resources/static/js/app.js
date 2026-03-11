@@ -1,66 +1,84 @@
 // ==============================
-// Load all declarations
+// Load declarations (list or search)
 // ==============================
 
-async function fetchDeclarations() {
+function fetchDeclarations() {
 
-    try {
+    const searchInput = document.getElementById("search-job");
+    const jobNo = searchInput ? searchInput.value.trim() : "";
 
-        const response = await fetch("/api/declarations");
+    let url = "/api/declarations";
 
-        if (!response.ok) {
-            throw new Error("Failed to fetch declarations");
-        }
+    if (jobNo !== "") {
+        url = `/api/declarations/${jobNo}`;
+    }
 
-        const data = await response.json();
+    fetch(url)
+        .then(response => {
 
-        const tableBody = document.getElementById("table-body");
+            if (!response.ok) {
+                throw new Error("Failed to fetch declarations");
+            }
 
-        if (!tableBody) return;
+            return response.json();
 
-        tableBody.innerHTML = "";
+        })
+        .then(data => {
 
-        data.forEach(item => {
+            const tableBody = document.getElementById("table-body");
 
-            const row = document.createElement("tr");
+            if (!tableBody) return;
 
-            row.innerHTML = `
-                <td>
-                    <a href="specific.html?jobNo=${item.jobNo}">
-                        ${item.jobNo}
-                    </a>
-                </td>
-                <td>${item.partyName || ""}</td>
-                <td>${item.transportMode || ""}</td>
-                <td>${item.eventDate || ""}</td>
-                <td>${item.status || ""}</td>
-            `;
+            tableBody.innerHTML = "";
 
-            tableBody.appendChild(row);
+            if (!Array.isArray(data)) {
+                data = [data];
+            }
+
+            data.forEach(item => {
+
+                const row = document.createElement("tr");
+
+                row.innerHTML = `
+                    <td>
+                        <a href="specific.html?jobNo=${item.jobNo}">
+                            ${item.jobNo}
+                        </a>
+                    </td>
+                    <td>${item.partyName || ""}</td>
+                    <td>${item.transportMode || ""}</td>
+                    <td>${item.eventDate || ""}</td>
+                    <td>${item.status || ""}</td>
+                `;
+
+                tableBody.appendChild(row);
+
+            });
+
+        })
+        .catch(error => {
+
+            console.error("Error loading declarations:", error);
 
         });
 
-    } catch (error) {
+}
 
-        console.error("Error loading declarations:", error);
 
+// ==============================
+// Reset search
+// ==============================
+
+function resetFilters() {
+
+    const searchInput = document.getElementById("search-job");
+
+    if (searchInput) {
+        searchInput.value = "";
     }
 
-}
+    fetchDeclarations();
 
-
-// ==============================
-// Modal controls
-// ==============================
-
-function openModal() {
-    const modal = document.getElementById("declarationModal");
-    if (modal) modal.style.display = "block";
-}
-
-function closeModal() {
-    const modal = document.getElementById("declarationModal");
-    if (modal) modal.style.display = "none";
 }
 
 
@@ -117,6 +135,44 @@ async function saveDeclaration(event) {
 
 
 // ==============================
+// Modal controls
+// ==============================
+
+function openModal() {
+
+    const modal = document.getElementById("declarationModal");
+
+    if (modal) {
+        modal.style.display = "block";
+    }
+
+}
+
+function closeModal() {
+
+    const modal = document.getElementById("declarationModal");
+
+    if (modal) {
+        modal.style.display = "none";
+    }
+
+}
+
+
+// ==============================
+// Logout
+// ==============================
+
+function logout() {
+
+    localStorage.removeItem("isLoggedIn");
+
+    window.location.href = "login.html";
+
+}
+
+
+// ==============================
 // Page load
 // ==============================
 
@@ -127,81 +183,3 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
 });
-function logout() {
-
-    localStorage.removeItem("isLoggedIn");
-
-    window.location.href = "login.html";
-
-}
-function fetchDeclarations() {
-
-    const jobNo = document.getElementById("search-job").value.trim();
-
-    let url = "/api/declarations";
-
-    if (jobNo !== "") {
-        url = `/api/declarations/${jobNo}`;
-    }
-
-    fetch(url)
-        .then(res => res.json())
-        .then(data => {
-
-            const tableBody = document.getElementById("table-body");
-            tableBody.innerHTML = "";
-
-            if (!Array.isArray(data)) {
-                data = [data];
-            }
-
-            data.forEach(item => {
-
-                const row = document.createElement("tr");
-
-                row.innerHTML = `
-                    <td><a href="specific.html?jobNo=${item.jobNo}">${item.jobNo}</a></td>
-                    <td>${item.partyName || ""}</td>
-                    <td>${item.transportMode || ""}</td>
-                    <td>${item.eventDate || ""}</td>
-                    <td>${item.status || ""}</td>
-                `;
-
-                tableBody.appendChild(row);
-
-            });
-
-        });
-
-}
-function resetFilters() {
-
-    document.getElementById("search-job").value = "";
-
-    fetch("/api/declarations")
-        .then(res => res.json())
-        .then(data => {
-
-            const tableBody = document.getElementById("table-body");
-            tableBody.innerHTML = "";
-
-            data.forEach(item => {
-
-                const row = document.createElement("tr");
-
-                row.innerHTML = `
-                    <td><a href="specific.html?jobNo=${item.jobNo}">${item.jobNo}</a></td>
-                    <td>${item.partyName || ""}</td>
-                    <td>${item.transportMode || ""}</td>
-                    <td>${item.eventDate || ""}</td>
-                    <td>${item.status || ""}</td>
-                `;
-
-                tableBody.appendChild(row);
-
-            });
-
-        });
-
-}
-
