@@ -97,7 +97,7 @@ async function getNextSequence() {
 
     try {
 
-        const response = await fetch(`http://localhost:8080/api/declarations/last?date=${today}`);
+        const response = await fetch(`/api/declarations/last?date=${today}`);
 
         if (!response.ok) throw new Error();
 
@@ -194,3 +194,4 @@ async function saveDeclaration(statusValue) {
     }
 
 }
+
