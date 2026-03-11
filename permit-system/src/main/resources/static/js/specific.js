@@ -32,7 +32,7 @@ async function loadDeclarationData(jobNo) {
 
     try {
 
-        const response = await fetch(`http://localhost:8080/api/declarations/${jobNo}`);
+        const response = await fetch(`/api/declarations/${jobNo}`);
 
         if (!response.ok) {
             throw new Error("Declaration not found");
@@ -192,4 +192,5 @@ async function saveDeclaration(statusValue) {
         alert("Failed to save declaration");
 
     }
+
 }
