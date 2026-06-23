@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - TradeWeb Live</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .alert-bar {
+            padding: 12px 16px;
+            border-radius: var(--radius-xs);
+            font-size: 13px;
+            margin-bottom: 18px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            line-height: 1.5;
+        }
+        .alert-bar.success { background: var(--success-bg); color: #065f46; border: 1px solid var(--success-border); }
+        .alert-bar.error { background: var(--danger-bg); color: #991b1b; border: 1px solid var(--danger-border); }
+        .alert-bar svg { width: 18px; height: 18px; flex-shrink: 0; }
+        .resend-link {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+            font-family: var(--font);
+            padding: 0;
+            text-decoration: underline;
+        }
+        .resend-link:hover { color: var(--primary-hover); }
+        .resend-link:disabled { color: var(--text-muted); cursor: not-allowed; text-decoration: none; }
+    </style>
+</head>
+<body class="auth-page">
+    <div class="auth-card">
+
+        <div class="auth-logo">
+            <div class="auth-logo-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            </div>
+            <h1>TradeWeb Live</h1>
+            <p>Sign in to your account</p>
+        </div>
+
+        <div class="alert-bar success" id="alert-success">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span id="alert-success-text"></span>
+        </div>
+
+        <div class="alert-bar error" id="alert-error">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            <span id="alert-error-text"></span>
+        </div>
+
+        <form id="login-form" novalidate>
+            <div class="form-group">
+                <label class="form-label" for="email">Email address</label>
+                <div class="input-wrap">
+                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4L12 13 2 4"/></svg>
+                    <input type="email" id="email" class="form-input" placeholder="you@company.com" required autocomplete="email" spellcheck="false">
+                </div>
+                <div class="field-error" id="email-error">Please enter a valid email address</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="password">Password</label>
+                <div class="input-wrap">
+                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                    <input type="password" id="password" class="form-input" placeholder="Enter your password" required minlength="6" autocomplete="current-password">
+                    <button type="button" class="pw-toggle" id="toggle-pw" aria-label="Show password">
+                        <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                    </button>
+                </div>
+                <div class="field-error" id="password-error">Password must be at least 6 characters</div>
+            </div>
+
+            <div class="form-links">
+                <span></span>
+                <a href="pages/forgot-password.html" class="link-sm">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="login-btn">
+                <span class="btn-label">Sign In</span>
+                <div class="spinner"></div>
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            Don't have an account? <a href="pages/register.html">Create account</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.108.2"></script>
+    <script src="js/lib/config.js?v=5"></script>
+    <script src="js/lib/ui.js?v=4"></script>
+    <script src="js/modules/auth.js?v=4"></script>
+    <script>
+        function showAlert(type, msg) {
+            document.getElementById('alert-success').style.display = 'none';
+            document.getElementById('alert-error').style.display = 'none';
+            if (type === 'success') {
+                document.getElementById('alert-success-text').textContent = msg;
+                document.getElementById('alert-success').style.display = 'flex';
+            } else if (type === 'error') {
+                document.getElementById('alert-error-text').textContent = msg;
+                document.getElementById('alert-error').style.display = 'flex';
+            }
+        }
+
+        function hideAlerts() {
+            document.getElementById('alert-success').style.display = 'none';
+            document.getElementById('alert-error').style.display = 'none';
+        }
+
+        document.getElementById('toggle-pw').addEventListener('click', function() {
+            const i = document.getElementById('password');
+            const show = i.type === 'password';
+            i.type = show ? 'text' : 'password';
+            this.querySelector('.eye-open').style.display = show ? 'none' : 'block';
+            this.querySelector('.eye-closed').style.display = show ? 'block' : 'none';
+        });
+
+        document.getElementById('email').addEventListener('input', function() {
+            hideAlerts();
+            if (this.value && !validateEmail(this.value)) showErr('email-error'); else hideErr('email-error');
+        });
+
+        document.getElementById('password').addEventListener('input', function() {
+            if (this.value && this.value.length < 6) showErr('password-error'); else hideErr('password-error');
+        });
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            let ok = true;
+            if (!email || !validateEmail(email)) { showErr('email-error'); ok = false; } else hideErr('email-error');
+            if (!password || password.length < 6) { showErr('password-error'); ok = false; } else hideErr('password-error');
+            if (!ok) return;
+
+            const btn = document.getElementById('login-btn');
+            btn.classList.add('loading');
+            btn.disabled = true;
+            hideAlerts();
+            try {
+                if (typeof Auth === 'undefined') throw new Error('Unable to connect to authentication service. Please check your configuration.');
+                await Auth.signIn(email, password);
+                Toast.success('Welcome back!');
+                setTimeout(() => window.location.replace('pages/dashboard.html'), 500);
+            } catch (err) {
+                const msg = err.message || 'Unable to sign in. Please try again.';
+                if (msg.toLowerCase().includes('verify your email')) {
+                    showAlert('error', msg + ' ');
+                    const resendEl = document.createElement('button');
+                    resendEl.type = 'button';
+                    resendEl.className = 'resend-link';
+                    resendEl.textContent = 'Resend verification email';
+                    resendEl.onclick = async function() {
+                        this.disabled = true;
+                        this.textContent = 'Sending...';
+                        try {
+                            await Auth.resendVerification(email);
+                            showAlert('success', 'Verification email sent! Check your inbox.');
+                        } catch (e) {
+                            showAlert('error', e.message || 'Failed to resend. Please try again.');
+                        }
+                        this.disabled = false;
+                        this.textContent = 'Resend verification email';
+                    };
+                    document.getElementById('alert-error').appendChild(resendEl);
+                } else {
+                    Toast.error(msg);
+                }
+                btn.classList.remove('loading');
+                btn.disabled = false;
+            }
+        });
+
+        (async () => {
+            if (typeof Auth === 'undefined') return;
+            await Auth.init();
+            if (Auth.isAuth()) window.location.replace('pages/dashboard.html');
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title id="page-title">New Declaration - TradeWeb Live</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .form-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 12px; }
+        .form-row.cols-2 { grid-template-columns: repeat(2, 1fr); }
+        .form-row.cols-4 { grid-template-columns: repeat(4, 1fr); }
+        .form-group { margin-bottom: 0; }
+        .form-group .form-label { font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 3px; display: block; }
+        .form-group .form-input, .form-group .form-select { padding: 8px 10px; font-size: 13px; width: 100%; box-sizing: border-box; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg-card); font-family: var(--font); color: var(--text); appearance: auto; }
+        .form-group .form-input:focus, .form-group .form-select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-ring); }
+        .form-group .form-input[readonly] { background: #f9fafb; color: var(--text-secondary); }
+
+        .section-title { font-size: 12px; font-weight: 700; color: var(--text); text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 0 6px; border-bottom: 2px solid var(--primary); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+        .section-title svg { width: 16px; height: 16px; color: var(--primary); }
+
+        .items-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        .items-table th { padding: 6px 8px; background: var(--bg); border: 1px solid var(--border); font-size: 10px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; text-align: left; white-space: nowrap; }
+        .items-table td { padding: 3px 4px; border: 1px solid var(--border); }
+        .items-table td input, .items-table td select { width: 100%; padding: 6px 8px; border: 1px solid transparent; border-radius: var(--radius-xs); font-size: 12px; font-family: var(--font); background: transparent; transition: border-color 0.15s; box-sizing: border-box; }
+        .items-table td input:focus, .items-table td select:focus { outline: none; border-color: var(--primary); background: var(--bg-card); }
+        .items-table td input.error, .items-table td select.error { border-color: var(--danger); background: #fef2f2; }
+        .items-table .row-actions { text-align: center; }
+        .items-table .row-remove { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 4px; border-radius: 4px; display: inline-flex; transition: all 0.12s; }
+        .items-table .row-remove:hover { background: var(--danger-bg); color: var(--danger); }
+        .items-table .row-remove svg { width: 14px; height: 14px; }
+        .add-item-btn { display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; border: 1px dashed var(--border); border-radius: var(--radius-xs); background: transparent; cursor: pointer; font-size: 12px; font-weight: 600; color: var(--primary); font-family: var(--font); transition: all 0.15s; margin-top: 8px; }
+        .add-item-btn:hover { border-color: var(--primary); background: var(--primary-light); }
+        .add-item-btn svg { width: 14px; height: 14px; }
+
+        .summary-row { display: flex; gap: 20px; padding: 8px 12px; background: var(--primary-light); border: 1px solid var(--primary-ring); border-radius: var(--radius-xs); margin-top: 8px; font-size: 12px; }
+        .summary-row .summary-label { color: var(--text-secondary); font-weight: 500; }
+        .summary-row .summary-value { font-weight: 700; color: var(--text); margin-left: 4px; }
+
+        .remarks-area { width: 100%; min-height: 80px; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; font-family: var(--font); resize: vertical; box-sizing: border-box; }
+        .remarks-area:focus { outline: none; border-color: var(--primary); }
+
+        .file-upload-zone { border: 2px dashed var(--border); border-radius: var(--radius-sm); padding: 16px; text-align: center; cursor: pointer; transition: all 0.15s; }
+        .file-upload-zone:hover, .file-upload-zone.dragover { border-color: var(--primary); background: var(--primary-light); }
+        .file-upload-zone svg { width: 24px; height: 24px; color: var(--text-muted); margin-bottom: 6px; }
+        .file-upload-zone p { font-size: 12px; color: var(--text-secondary); margin: 0; }
+        .file-upload-zone .browse { color: var(--primary); font-weight: 600; cursor: pointer; }
+        .file-upload-zone input { display: none; }
+
+        .file-list { margin-top: 8px; }
+        .file-item { display: flex; align-items: center; gap: 8px; padding: 6px 10px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-xs); margin-bottom: 4px; font-size: 12px; }
+        .file-item .file-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .file-item .file-size { font-size: 10px; color: var(--text-muted); white-space: nowrap; }
+        .file-item .file-remove { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 2px; border-radius: 4px; display: flex; transition: all 0.12s; }
+        .file-item .file-remove:hover { color: var(--danger); background: var(--danger-bg); }
+        .file-item .file-remove svg { width: 12px; height: 12px; }
+
+        .form-actions { display: flex; justify-content: flex-end; gap: 10px; padding: 16px 0 0; border-top: 1px solid var(--border); margin-top: 16px; }
+
+        @media (max-width: 768px) {
+            .form-row, .form-row.cols-2, .form-row.cols-4 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-icon">TW</div>
+                <span class="brand-text">TradeWeb</span>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-group">Main</div>
+                <a href="dashboard.html" class="nav-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                    Dashboard
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" class="nav-item" onclick="doSignOut(); return false;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    Sign Out
+                </a>
+            </div>
+        </aside>
+
+        <div class="main-content">
+            <header class="header">
+                <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                </button>
+                <div></div>
+                <div class="header-right">
+                    <div class="user-chip">
+                        <div class="user-avatar" id="avatar">U</div>
+                        <span class="user-name" id="display-name">User</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="page-content">
+                <div class="page-top">
+                    <div><h1 id="form-heading">New Declaration</h1></div>
+                    <a href="dashboard.html" class="btn-secondary" style="text-decoration:none;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                        Back
+                    </a>
+                </div>
+
+                <form id="declaration-form" novalidate>
+                    <div class="form-card">
+                        <div class="form-card-body" style="padding:16px">
+
+                            <div class="section-title">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                                Declaration Details
+                                <span class="badge booking" id="form-status-badge" style="margin-left:auto"><span class="badge-dot"></span>Booking</span>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Job Number</label>
+                                    <input type="text" id="job_number" class="form-input" readonly placeholder="Auto-generated">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Consignee <span class="req">*</span></label>
+                                    <input type="text" id="consignee_name" class="form-input" placeholder="Receiver name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Consignor <span class="req">*</span></label>
+                                    <input type="text" id="consignor_name" class="form-input" placeholder="Sender name" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Transport Mode <span class="req">*</span></label>
+                                    <select id="transport_mode" class="form-select" required>
+                                        <option value="road">Road</option>
+                                        <option value="sea">Sea</option>
+                                        <option value="air">Air</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Origin <span class="req">*</span></label>
+                                    <input type="text" id="origin" class="form-input" placeholder="From" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Destination <span class="req">*</span></label>
+                                    <input type="text" id="destination" class="form-input" placeholder="To" required>
+                                </div>
+                            </div>
+
+                            <div class="section-title" style="margin-top:16px">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                                Shipment Information
+                            </div>
+
+                            <div class="form-row cols-2">
+                                <div class="form-group">
+                                    <label class="form-label">Outer Package Count</label>
+                                    <input type="number" id="outer_package_count" class="form-input" placeholder="0" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Package UOM</label>
+                                    <select id="outer_package_uom" class="form-select">
+                                        <option value="package">Package</option>
+                                        <option value="container">Container</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row cols-2">
+                                <div class="form-group">
+                                    <label class="form-label">Gross Weight <span class="req">*</span></label>
+                                    <input type="number" id="gross_weight" class="form-input" placeholder="0.00" min="0" step="0.01">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Weight UOM</label>
+                                    <select id="weight_uom" class="form-select">
+                                        <option value="kg">KG</option>
+                                        <option value="tne">Tonne</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="section-title" style="margin-top:16px">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                                Goods Information
+                            </div>
+
+                            <div style="overflow-x:auto">
+                                <table class="items-table" id="items-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:3%">#</th>
+                                            <th style="width:12%">HS Code</th>
+                                            <th style="width:28%">Description</th>
+                                            <th style="width:8%">COO</th>
+                                            <th style="width:8%">Qty</th>
+                                            <th style="width:12%">Amount</th>
+                                            <th style="width:8%">Currency</th>
+                                            <th style="width:3%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="items-tbody"></tbody>
+                                </table>
+                            </div>
+
+                            <button type="button" class="add-item-btn" onclick="addRow()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                Add Item
+                            </button>
+
+                            <div class="summary-row">
+                                <div><span class="summary-label">Items:</span><span class="summary-value" id="sum-items">0</span></div>
+                                <div><span class="summary-label">Total Qty:</span><span class="summary-value" id="sum-qty">0</span></div>
+                                <div><span class="summary-label">Total Amount:</span><span class="summary-value" id="sum-amount">0.00</span></div>
+                            </div>
+
+                            <div class="section-title" style="margin-top:16px">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                Remarks
+                            </div>
+
+                            <textarea id="remarks" class="remarks-area" placeholder="Enter operational notes, special instructions, or any additional information..."></textarea>
+
+                            <div class="section-title" style="margin-top:16px">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+                                Supporting Documents
+                            </div>
+
+                            <div class="file-upload-zone" id="file-drop">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                <p>Drag files here or <span class="browse">browse</span></p>
+                                <p style="font-size:10px;color:var(--text-muted);margin-top:2px">PDF, JPG, PNG, XLSX up to 10MB</p>
+                                <input type="file" id="file-input" multiple accept=".pdf,.jpg,.jpeg,.png,.xlsx">
+                            </div>
+                            <div class="file-list" id="file-list"></div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn-secondary" onclick="window.location.href='dashboard.html'">Cancel</button>
+                                <button type="button" class="btn-secondary" id="print-btn" onclick="printDeclaration()" style="display:none">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                                    Print
+                                </button>
+                                <button type="button" class="btn-secondary" id="save-booking-btn" onclick="saveBooking()">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                                    Save Booking
+                                </button>
+                                <button type="button" class="btn btn-primary btn-sm" id="complete-btn" onclick="completeDeclaration()" style="width:auto">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                    Complete Declaration
+                                    <div class="spinner"></div>
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.108.2"></script>
+    <script src="../js/lib/config.js?v=5"></script>
+    <script src="../js/lib/ui.js?v=4"></script>
+    <script src="../js/modules/auth.js?v=4"></script>
+    <script src="../js/modules/permits.js?v=4"></script>
+    <script>
+        let editMode = false;
+        let editId = null;
+        let editJobNumber = '';
+        let uploadedFiles = [];
+        let rowCounter = 0;
+        let currentUserEmail = '';
+
+        async function doSignOut() {
+            try {
+                if (typeof Auth !== 'undefined' && typeof Auth.signOut === 'function') {
+                    await Auth.signOut();
+                } else {
+                    localStorage.clear();
+                    sessionStorage.clear();
+                }
+                window.location.replace('../index.html');
+            } catch (e) {
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.replace('../index.html');
+            }
+        }
+
+        function setStatusBadge(status) {
+            const badge = document.getElementById('form-status-badge');
+            const s = (status || 'booking').toLowerCase();
+            badge.className = 'badge ' + s;
+            badge.innerHTML = '<span class="badge-dot"></span>' + s.charAt(0).toUpperCase() + s.slice(1);
+        }
+
+        function addRow(data) {
+            rowCounter++;
+            const idx = rowCounter;
+            const tbody = document.getElementById('items-tbody');
+            const tr = document.createElement('tr');
+            tr.id = 'row-' + idx;
+            tr.innerHTML = `
+                <td style="text-align:center;font-size:11px;font-weight:600;color:var(--text-secondary)">${idx}</td>
+                <td><input type="text" class="item-hs_code" placeholder="e.g. 84713000" maxlength="8" pattern="\d{8}" inputmode="numeric" value="${data ? escapeHtml(data.hs_code || '') : ''}"></td>
+                <td><input type="text" class="item-goods_description" placeholder="Goods description" value="${data ? escapeHtml(data.goods_description || '') : ''}"></td>
+                <td><input type="text" class="item-country_of_origin" placeholder="US" value="${data ? escapeHtml(data.country_of_origin || '') : ''}"></td>
+                <td><input type="number" class="item-quantity" placeholder="0" min="0" value="${data ? (data.quantity || '') : ''}"></td>
+                <td><input type="number" class="item-amount" placeholder="0.00" min="0" step="0.01" value="${data ? (data.amount || '') : ''}"></td>
+                <td><select class="item-currency">
+                    <option value="USD" ${data && data.currency === 'USD' ? 'selected' : ''}>USD</option>
+                    <option value="EUR" ${data && data.currency === 'EUR' ? 'selected' : ''}>EUR</option>
+                    <option value="INR" ${data && data.currency === 'INR' ? 'selected' : ''}>INR</option>
+                    <option value="LKR" ${data && data.currency === 'LKR' ? 'selected' : ''}>LKR</option>
+                    <option value="AED" ${data && data.currency === 'AED' ? 'selected' : ''}>AED</option>
+                    <option value="SGD" ${data && data.currency === 'SGD' ? 'selected' : ''}>SGD</option>
+                    <option value="GBP" ${data && data.currency === 'GBP' ? 'selected' : ''}>GBP</option>
+                    <option value="CNY" ${data && data.currency === 'CNY' ? 'selected' : ''}>CNY</option>
+                    <option value="JPY" ${data && data.currency === 'JPY' ? 'selected' : ''}>JPY</option>
+                </select></td>
+                <td class="row-actions"><button type="button" class="row-remove" onclick="removeRow(${idx})" title="Remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></td>
+            `;
+            tbody.appendChild(tr);
+            updateSummary();
+        }
+
+        function removeRow(idx) {
+            const row = document.getElementById('row-' + idx);
+            if (row) row.remove();
+            updateSummary();
+        }
+
+        function getItems() {
+            const items = [];
+            document.querySelectorAll('#items-tbody tr').forEach(tr => {
+                items.push({
+                    hs_code: tr.querySelector('.item-hs_code').value.trim(),
+                    goods_description: tr.querySelector('.item-goods_description').value.trim(),
+                    country_of_origin: tr.querySelector('.item-country_of_origin').value.trim(),
+                    quantity: tr.querySelector('.item-quantity').value,
+                    amount: tr.querySelector('.item-amount').value,
+                    currency: tr.querySelector('.item-currency').value
+                });
+            });
+            return items;
+        }
+
+        function updateSummary() {
+            const items = getItems();
+            const totalQty = items.reduce((s, i) => s + (parseFloat(i.quantity) || 0), 0);
+            const totalAmount = items.reduce((s, i) => s + (parseFloat(i.amount) || 0), 0);
+            document.getElementById('sum-items').textContent = items.length;
+            document.getElementById('sum-qty').textContent = totalQty;
+            document.getElementById('sum-amount').textContent = totalAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function validateForm() {
+            let ok = true;
+            ['consignee_name', 'consignor_name', 'origin', 'destination'].forEach(id => {
+                const el = document.getElementById(id);
+                if (!el.value.trim()) { el.classList.add('error'); ok = false; } else el.classList.remove('error');
+            });
+            const gw = document.getElementById('gross_weight');
+            if (!gw.value || parseFloat(gw.value) <= 0) { gw.classList.add('error'); ok = false; } else gw.classList.remove('error');
+            if (!getItems().length) { Toast.error('Please add at least one item.'); ok = false; }
+            document.querySelectorAll('#items-tbody tr').forEach(tr => {
+                ['goods_description', 'country_of_origin', 'quantity', 'amount'].forEach(cls => {
+                    const el = tr.querySelector('.item-' + cls);
+                    if (el && !el.value.trim()) { el.classList.add('error'); ok = false; } else if (el) el.classList.remove('error');
+                });
+                const hs = tr.querySelector('.item-hs_code');
+                if (hs) {
+                    const v = hs.value.trim();
+                    if (!v || !/^\d{8}$/.test(v)) { hs.classList.add('error'); ok = false; Toast.error('HS Code must be exactly 8 digits.'); } else hs.classList.remove('error');
+                }
+            });
+            return ok;
+        }
+
+        function getFormData() {
+            return {
+                consignee_name: document.getElementById('consignee_name').value.trim(),
+                consignor_name: document.getElementById('consignor_name').value.trim(),
+                transport_mode: document.getElementById('transport_mode').value,
+                origin: document.getElementById('origin').value.trim(),
+                destination: document.getElementById('destination').value.trim(),
+                outer_package_count: document.getElementById('outer_package_count').value,
+                outer_package_uom: document.getElementById('outer_package_uom').value,
+                gross_weight: document.getElementById('gross_weight').value,
+                weight_uom: document.getElementById('weight_uom').value,
+                remarks: document.getElementById('remarks').value.trim()
+            };
+        }
+
+        function setBtnLoading(btn, loading) {
+            if (loading) { btn.classList.add('loading'); btn.disabled = true; }
+            else { btn.classList.remove('loading'); btn.disabled = false; }
+        }
+
+        async function saveBooking() {
+            const data = getFormData();
+            const btn = document.getElementById('save-booking-btn');
+            setBtnLoading(btn, true);
+            try {
+                if (typeof Declarations === 'undefined') throw new Error('Unable to connect to service.');
+                if (!Auth.uid) {
+                    console.error('[Form] Auth.uid is null. Auth.user:', Auth.user);
+                    throw new Error('Your session has expired. Please sign in again.');
+                }
+                if (editMode) {
+                    await Declarations.update(editId, data);
+                } else {
+                    const d = await Declarations.create(data);
+                    editId = d.id;
+                    editJobNumber = d.job_number;
+                    editMode = true;
+                    document.getElementById('job_number').value = d.job_number || '';
+                    document.getElementById('page-title').textContent = 'Edit Declaration - TradeWeb Live';
+                    document.getElementById('form-heading').textContent = 'Edit Declaration';
+                    document.getElementById('print-btn').style.display = '';
+                }
+                await Declarations.saveItems(editJobNumber, getItems());
+                await uploadPendingFiles();
+                Toast.success('Booking saved.');
+            } catch (e) {
+                console.error('[Form] Save booking error:', e);
+                Toast.error(e.message || 'Failed to save booking.');
+            }
+            setBtnLoading(btn, false);
+        }
+
+        async function completeDeclaration() {
+            if (!validateForm()) { Toast.error('Please fill all required fields.'); return; }
+            if (!confirm('Complete this declaration?')) return;
+            const data = getFormData();
+            data.status = 'completed';
+            const btn = document.getElementById('complete-btn');
+            setBtnLoading(btn, true);
+            try {
+                if (typeof Declarations === 'undefined') throw new Error('Unable to connect to service.');
+                if (!Auth.uid) {
+                    console.error('[Form] Auth.uid is null. Auth.user:', Auth.user);
+                    throw new Error('Your session has expired. Please sign in again.');
+                }
+                if (editMode) {
+                    await Declarations.update(editId, data);
+                } else {
+                    const d = await Declarations.create(data);
+                    editId = d.id;
+                    editJobNumber = d.job_number;
+                    await Declarations.update(editId, { status: 'completed' });
+                }
+                await Declarations.saveItems(editJobNumber, getItems());
+                await uploadPendingFiles();
+                Toast.success('Declaration completed!');
+                setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
+            } catch (e) {
+                console.error('[Form] Complete declaration error:', e);
+                Toast.error(e.message || 'Failed to complete declaration.');
+                setBtnLoading(btn, false);
+            }
+        }
+
+        async function printDeclaration() {
+            if (!editId) { Toast.error('Save the declaration first.'); return; }
+            try {
+                const d = await Declarations.getById(editId);
+                const items = await Declarations.getItems(editJobNumber);
+                const html = generatePrintHTML(d, items);
+                const printWindow = window.open('', '_blank');
+                printWindow.document.write(html);
+                printWindow.document.close();
+                printWindow.focus();
+                Declarations.saveCCP(editId, d.job_number, html).catch(() => {});
+                setTimeout(() => { printWindow.print(); }, 500);
+            } catch (e) { Toast.error('Failed to generate print view.'); }
+        }
+
+        function generatePrintHTML(d, items) {
+            const totalQty = items.reduce((s, i) => s + (parseFloat(i.quantity) || 0), 0);
+            const totalAmt = items.reduce((s, i) => s + (parseFloat(i.amount) || 0), 0);
+            const cur = items.length ? items[0].currency : 'USD';
+            const now = new Date();
+            const printDate = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            const printTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+            const itemsRows = items.map(i => `
+                <tr>
+                    <td style="text-align:center">${i.line_no}</td>
+                    <td>${i.hs_code}</td>
+                    <td>${i.country_of_origin || ''}</td>
+                    <td>${i.goods_description}</td>
+                    <td style="text-align:right">${i.quantity}</td>
+                    <td style="text-align:right">${cur} ${Number(i.amount||0).toLocaleString()}</td>
+                </tr>`).join('');
+
+            return `<!DOCTYPE html>
+<html><head><title>Declaration - ${d.job_number}</title>
+<style>
+    @page{size:A4;margin:15mm}body{font-family:Arial,sans-serif;font-size:11px;color:#000;line-height:1.4;margin:0}
+    .hdr{text-align:center;border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:12px}
+    .hdr h1{font-size:16px;margin:0;text-transform:uppercase}.hdr p{font-size:10px;margin:2px 0 0;color:#555}
+    .title{font-size:12px;font-weight:bold;text-align:center;margin:10px 0 6px;text-decoration:underline}
+    table{width:100%;border-collapse:collapse;margin-bottom:10px}
+    td,th{border:1px solid #000;padding:4px 6px;font-size:10px;vertical-align:top}
+    th{background:#f0f0f0;font-weight:bold;text-align:left}
+    .items th{font-size:9px;text-transform:uppercase}.items td{font-size:10px}
+    .ftr{margin-top:20px;display:flex;justify-content:space-between}
+    .sign-box{width:45%;text-align:center}.sign-box .line{border-top:1px solid #000;margin-top:40px;padding-top:4px;font-size:10px}
+    .remarks-box{border:1px solid #000;padding:8px;margin-bottom:10px;min-height:40px;font-size:10px;white-space:pre-wrap}
+<` + `/style><` + `/head><` + `/body>
+<div class="hdr"><h1>Customs Declaration</h1><p>Carrier's Cargo Report</p></div>
+<div class="title">DECLARATION DETAILS</div>
+<table>
+    <tr><th style="width:35%">Job Number</th><td>${d.job_number || '-'}</td></tr>
+    <tr><th>Date</th><td>${fmtDate(d.created_at)}</td></tr>
+    <tr><th>Status</th><td>${(d.status||'').toUpperCase()}</td></tr>
+    <tr><th>Transport Mode</th><td>${(d.transport_mode||'').toUpperCase()}</td></tr>
+</table>
+<div class="title">PARTIES</div>
+<table>
+    <tr><th style="width:35%">Consignee</th><td>${d.consignee_name}</td></tr>
+    <tr><th>Consignor</th><td>${d.consignor_name}</td></tr>
+</table>
+<div class="title">ROUTE</div>
+<table>
+    <tr><th style="width:35%">Origin</th><td>${d.origin}</td></tr>
+    <tr><th>Destination</th><td>${d.destination}</td></tr>
+</table>
+<div class="title">SHIPMENT</div>
+<table>
+    <tr><th style="width:35%">Package Count</th><td>${d.outer_package_count || 0}</td></tr>
+    <tr><th>Package UOM</th><td>${(d.outer_package_uom||'package').charAt(0).toUpperCase()+(d.outer_package_uom||'package').slice(1)}</td></tr>
+    <tr><th>Gross Weight</th><td>${d.gross_weight||0}</td></tr>
+    <tr><th>Weight UOM</th><td>${(d.weight_uom||'kg').toUpperCase()}</td></tr>
+</table>
+<div class="title">GOODS (${items.length} items)</div>
+<table class="items">
+    <thead><tr><th style="width:4%;text-align:center">#</th><th style="width:12%">HS Code</th><th style="width:8%">COO</th><th style="width:30%">Description</th><th style="width:8%;text-align:right">Qty</th><th style="width:14%;text-align:right">Amount</th></tr></thead>
+    <tbody>${itemsRows}
+        <tr style="font-weight:bold;background:#f0f0f0"><td colspan="4" style="text-align:right">TOTAL</td><td style="text-align:right">${totalQty}</td><td style="text-align:right">${cur} ${totalAmt.toLocaleString()}</td></tr>
+    </tbody>
+</table>
+${d.remarks?`<div class="title">REMARKS</div><div class="remarks-box">${d.remarks}</div>`:''}
+<div class="ftr"><div class="sign-box"><div class="line">Authorized Signature</div></div><div class="sign-box"><div class="line">Printed: ${printDate} ${printTime} by ${currentUserEmail}</div></div></div>
+<` + `/body><` + `/html>`;
+        }
+
+        async function loadDeclaration(id) {
+            try {
+                const d = await Declarations.getById(id);
+                const items = await Declarations.getItems(d.job_number);
+                editJobNumber = d.job_number;
+                document.getElementById('job_number').value = d.job_number || '';
+                document.getElementById('transport_mode').value = d.transport_mode || 'road';
+                document.getElementById('consignee_name').value = d.consignee_name || '';
+                document.getElementById('consignor_name').value = d.consignor_name || '';
+                document.getElementById('origin').value = d.origin || '';
+                document.getElementById('destination').value = d.destination || '';
+                document.getElementById('outer_package_count').value = d.outer_package_count || '';
+                document.getElementById('outer_package_uom').value = d.outer_package_uom || 'package';
+                document.getElementById('gross_weight').value = d.gross_weight || '';
+                document.getElementById('weight_uom').value = d.weight_uom || 'kg';
+                document.getElementById('remarks').value = d.remarks || '';
+                setStatusBadge(d.status);
+
+                items.forEach(item => addRow(item));
+
+                const isBooking = d.status === 'booking';
+                document.getElementById('print-btn').style.display = '';
+
+                if (!isBooking) {
+                    document.getElementById('declaration-form').querySelectorAll('input, select, textarea').forEach(el => { el.disabled = true; });
+                    document.getElementById('save-booking-btn').style.display = 'none';
+                    document.getElementById('complete-btn').style.display = 'none';
+                    document.getElementById('file-drop').style.display = 'none';
+                    document.querySelector('.add-item-btn').style.display = 'none';
+                    document.querySelectorAll('.row-remove').forEach(b => b.style.display = 'none');
+                }
+
+                await loadExistingDocs(d.job_number, isBooking);
+            } catch (e) {
+                Toast.error('Failed to load declaration.');
+                setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
+            }
+        }
+
+        async function loadExistingDocs(jobNumber, isEditable) {
+            const docs = await Declarations.getDocuments(jobNumber);
+            const list = document.getElementById('file-list');
+            list.innerHTML = '';
+            docs.forEach(doc => {
+                const item = document.createElement('div');
+                item.className = 'file-item';
+                item.id = 'doc-' + doc.id;
+                let actions = `<button class="file-btn download" title="Download" onclick="downloadDoc('${doc.file_path}','${escapeHtml(doc.file_name)}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>`;
+                if (isEditable) {
+                    actions += `<button class="file-btn delete" title="Delete" onclick="deleteDoc('${doc.id}','${doc.file_path}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>`;
+                }
+                item.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span class="file-name">${escapeHtml(doc.file_name)}</span><span class="file-size">${fmtSize(doc.file_size)}</span><div class="file-actions">${actions}</div>`;
+                list.appendChild(item);
+            });
+        }
+
+        async function downloadDoc(fp, fn) { try { await Declarations.downloadFile(fp, fn); } catch (e) { Toast.error(e.message); } }
+
+        async function deleteDoc(docId, fp) {
+            if (!confirm('Delete this file?')) return;
+            try { await Declarations.deleteDocument(docId, fp); Toast.success('Deleted.'); document.getElementById('doc-' + docId)?.remove(); } catch (e) { Toast.error(e.message); }
+        }
+
+        async function uploadPendingFiles() {
+            if (!editId || !uploadedFiles.length) return;
+            for (const file of uploadedFiles) {
+                try { await Declarations.uploadDocument(editJobNumber, file); } catch (e) { Toast.error('Failed: ' + file.name); }
+            }
+            uploadedFiles = [];
+            if (editJobNumber) await loadExistingDocs(editJobNumber, true);
+        }
+
+        const fileDrop = document.getElementById('file-drop');
+        const fileInput = document.getElementById('file-input');
+        const fileList = document.getElementById('file-list');
+
+        fileDrop.addEventListener('click', () => fileInput.click());
+        fileDrop.addEventListener('dragover', e => { e.preventDefault(); fileDrop.classList.add('dragover'); });
+        fileDrop.addEventListener('dragleave', () => { fileDrop.classList.remove('dragover'); });
+        fileDrop.addEventListener('drop', e => { e.preventDefault(); fileDrop.classList.remove('dragover'); handleFiles(e.dataTransfer.files); });
+        fileInput.addEventListener('change', e => handleFiles(e.target.files));
+
+        function handleFiles(files) {
+            Array.from(files).forEach(file => {
+                if (file.size > 10 * 1024 * 1024) { Toast.error(file.name + ' exceeds 10MB.'); return; }
+                uploadedFiles.push(file);
+                const item = document.createElement('div');
+                item.className = 'file-item';
+                item.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span class="file-name">${escapeHtml(file.name)}</span><span class="file-size">${fmtSize(file.size)}</span><button class="file-remove" onclick="uploadedFiles=uploadedFiles.filter(f=>f.name!=='${escapeHtml(file.name)}');this.parentElement.remove()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>`;
+                fileList.appendChild(item);
+            });
+            fileInput.value = '';
+        }
+
+        document.getElementById('items-tbody').addEventListener('input', updateSummary);
+
+        (async () => {
+            try {
+                if (typeof Auth === 'undefined') { window.location.replace('../index.html'); return; }
+                await Auth.init();
+                if (!Auth.guard()) return;
+                currentUserEmail = Auth.email || 'User';
+                const initials = currentUserEmail.split('@')[0].slice(0, 2).toUpperCase();
+                document.getElementById('avatar').textContent = initials;
+                document.getElementById('display-name').textContent = currentUserEmail;
+
+                const params = new URLSearchParams(window.location.search);
+                const id = params.get('id');
+                if (id) {
+                    editMode = true;
+                    editId = id;
+                    document.getElementById('page-title').textContent = 'Edit Declaration - TradeWeb Live';
+                    document.getElementById('form-heading').textContent = 'Edit Declaration';
+                    await loadDeclaration(id);
+                } else {
+                    addRow();
+                }
+            } catch (e) {
+                console.error('[Form] Init error:', e);
+                window.location.replace('../index.html');
+            }
+        })();
+    </script>
+</body>
+</html>

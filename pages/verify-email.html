@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Email - TradeWeb Live</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="auth-page">
+    <div class="auth-card">
+
+        <div class="auth-logo">
+            <div class="auth-logo-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            </div>
+            <h1>Email Verification</h1>
+            <p id="status-text">Verifying your email...</p>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading-state" style="text-align:center;padding:20px 0">
+            <div class="spinner" style="width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 0.6s linear infinite;margin:0 auto"></div>
+            <p style="margin-top:16px;color:var(--text-secondary);font-size:14px">Please wait while we verify your email address.</p>
+        </div>
+
+        <!-- Success State -->
+        <div id="success-state" style="display:none">
+            <div class="success-state">
+                <div class="success-check">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <h2>Email Verified Successfully</h2>
+                <p>Your email has been verified. You can now sign in to your account.</p>
+                <a href="../index.html" class="btn btn-primary" style="text-decoration:none">
+                    <span class="btn-label">Sign In</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Error State -->
+        <div id="error-state" style="display:none">
+            <div class="success-state">
+                <div class="success-check" style="background:var(--danger-bg);border-color:var(--danger-border)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </div>
+                <h2>Verification Failed</h2>
+                <p id="error-message">Unable to verify your email. The link may have expired or is invalid.</p>
+                <a href="register.html" class="btn btn-primary" style="text-decoration:none">
+                    <span class="btn-label">Create New Account</span>
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.108.2"></script>
+    <script src="../js/lib/config.js?v=5"></script>
+    <script src="../js/lib/ui.js?v=4"></script>
+    <script src="../js/modules/auth.js?v=4"></script>
+    <script>
+        (async () => {
+            try {
+                if (typeof Auth === 'undefined') {
+                    showError('Unable to connect to authentication service.');
+                    return;
+                }
+
+                await Auth.init();
+
+                const hash = window.location.hash;
+                const query = window.location.search;
+                console.log('[Verify] hash:', hash ? 'present' : 'none', 'query:', query ? 'present' : 'none');
+
+                if (hash || query) {
+                    const client = _getClient();
+                    const { data, error } = await client.auth.getSession();
+
+                    if (error) {
+                        console.error('[Verify] Session error:', error.message);
+                        showError(error.message || 'Verification failed.');
+                        return;
+                    }
+
+                    if (data && data.session) {
+                        console.log('[Verify] Email verified successfully');
+                        document.getElementById('loading-state').style.display = 'none';
+                        document.getElementById('success-state').style.display = 'block';
+                        document.getElementById('status-text').textContent = 'Your email has been verified!';
+                        return;
+                    }
+                }
+
+                await new Promise(r => setTimeout(r, 2000));
+
+                if (Auth.isAuth()) {
+                    console.log('[Verify] User authenticated via init');
+                    document.getElementById('loading-state').style.display = 'none';
+                    document.getElementById('success-state').style.display = 'block';
+                    document.getElementById('status-text').textContent = 'Your email has been verified!';
+                } else {
+                    console.log('[Verify] No session found');
+                    showError('Verification link is invalid or has expired.');
+                }
+            } catch (e) {
+                console.error('[Verify] Error:', e);
+                showError('An unexpected error occurred. Please try again.');
+            }
+        })();
+
+        function showError(msg) {
+            document.getElementById('loading-state').style.display = 'none';
+            document.getElementById('error-state').style.display = 'block';
+            document.getElementById('error-message').textContent = msg;
+            document.getElementById('status-text').textContent = 'Verification failed';
+        }
+    </script>
+</body>
+</html>

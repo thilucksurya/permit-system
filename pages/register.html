@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - TradeWeb Live</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="auth-page">
+    <div class="auth-card">
+
+        <div class="auth-logo">
+            <div class="auth-logo-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            </div>
+            <h1>Create Account</h1>
+            <p>Start managing your logistics permits</p>
+        </div>
+
+        <!-- Registration Form -->
+        <div id="reg-form-section">
+            <form id="reg-form" novalidate>
+                <div class="form-group">
+                    <label class="form-label" for="name">Full name <span class="req">*</span></label>
+                    <div class="input-wrap">
+                        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        <input type="text" id="name" class="form-input" placeholder="John Smith" required autocomplete="name">
+                    </div>
+                    <div class="field-error" id="name-error">Please enter your name</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="email">Email address <span class="req">*</span></label>
+                    <div class="input-wrap">
+                        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4L12 13 2 4"/></svg>
+                        <input type="email" id="email" class="form-input" placeholder="you@company.com" required autocomplete="email">
+                    </div>
+                    <div class="field-error" id="email-error">Please enter a valid email address</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">Password <span class="req">*</span></label>
+                    <div class="input-wrap">
+                        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                        <input type="password" id="password" class="form-input" placeholder="Min 6 characters" required minlength="6" autocomplete="new-password">
+                        <button type="button" class="pw-toggle" onclick="togglePw('password', this)" aria-label="Show password">
+                            <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                        </button>
+                    </div>
+                    <div class="pw-strength">
+                        <div class="pw-strength-bar"></div>
+                        <div class="pw-strength-bar"></div>
+                        <div class="pw-strength-bar"></div>
+                        <div class="pw-strength-bar"></div>
+                    </div>
+                    <div class="pw-strength-text" id="pw-strength-label"></div>
+                    <div class="field-error" id="password-error">Password must be at least 6 characters</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="confirm">Confirm password <span class="req">*</span></label>
+                    <div class="input-wrap">
+                        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                        <input type="password" id="confirm" class="form-input" placeholder="Re-enter password" required autocomplete="new-password">
+                    </div>
+                    <div class="field-error" id="confirm-error">Passwords do not match</div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="reg-btn" style="margin-top:6px">
+                    <span class="btn-label">Create Account</span>
+                    <div class="spinner"></div>
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                Already have an account? <a href="../index.html">Sign in</a>
+            </div>
+        </div>
+
+        <!-- Email Verification Success -->
+        <div id="success-section" style="display:none">
+            <div class="success-state">
+                <div class="success-check">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                </div>
+                <h2>Check Your Email</h2>
+                <p>We've sent a verification link to <strong id="reg-email-display"></strong>. Click the link in the email to verify your account and sign in.</p>
+                <div style="margin-top:8px">
+                    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">Didn't receive the email? Check your spam folder or try again.</p>
+                    <button class="btn-secondary" id="resend-btn" onclick="resendVerification()" style="width:100%;justify-content:center;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+                        Resend Verification Email
+                    </button>
+                </div>
+                <a href="../index.html" class="btn btn-primary" style="text-decoration:none; margin-top:16px;">
+                    <span class="btn-label">Go to Sign In</span>
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.108.2"></script>
+    <script src="../js/lib/config.js?v=5"></script>
+    <script src="../js/lib/ui.js?v=4"></script>
+    <script src="../js/modules/auth.js?v=4"></script>
+    <script>
+        let registeredEmail = '';
+
+        function togglePw(id, btn) {
+            const i = document.getElementById(id);
+            const show = i.type === 'password';
+            i.type = show ? 'text' : 'password';
+            btn.querySelector('.eye-open').style.display = show ? 'none' : 'block';
+            btn.querySelector('.eye-closed').style.display = show ? 'block' : 'none';
+        }
+
+        document.getElementById('name').addEventListener('input', function() {
+            if (this.value && this.value.trim().length < 2) showErr('name-error'); else hideErr('name-error');
+        });
+
+        document.getElementById('email').addEventListener('input', function() {
+            if (this.value && !validateEmail(this.value)) showErr('email-error'); else hideErr('email-error');
+        });
+
+        document.getElementById('password').addEventListener('input', function() {
+            updateStrength(this.value);
+            if (this.value && this.value.length < 6) showErr('password-error'); else hideErr('password-error');
+            const c = document.getElementById('confirm');
+            if (c.value && c.value !== this.value) showErr('confirm-error'); else hideErr('confirm-error');
+        });
+
+        document.getElementById('confirm').addEventListener('input', function() {
+            const pw = document.getElementById('password').value;
+            if (this.value && this.value !== pw) showErr('confirm-error'); else hideErr('confirm-error');
+        });
+
+        document.getElementById('reg-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirm = document.getElementById('confirm').value;
+            let ok = true;
+
+            if (!name || name.length < 2) { showErr('name-error'); ok = false; } else hideErr('name-error');
+            if (!email || !validateEmail(email)) { showErr('email-error'); ok = false; } else hideErr('email-error');
+            if (!password || password.length < 6) { showErr('password-error'); ok = false; } else hideErr('password-error');
+            if (password !== confirm) { showErr('confirm-error'); ok = false; } else hideErr('confirm-error');
+            if (!ok) return;
+
+            const btn = document.getElementById('reg-btn');
+            btn.classList.add('loading');
+            btn.disabled = true;
+
+            try {
+                if (typeof Auth === 'undefined') throw new Error('Unable to connect to authentication service. Please check your configuration.');
+                console.log('[Register] Attempting signup for:', email);
+                await Auth.signUp(email, password, name);
+                registeredEmail = email;
+                document.getElementById('reg-email-display').textContent = email;
+                document.getElementById('reg-form-section').style.display = 'none';
+                document.getElementById('success-section').style.display = 'block';
+                Toast.success('Account created! Please check your email.');
+                console.log('[Register] Signup successful for:', email);
+            } catch (err) {
+                console.error('[Register] Signup failed:', err.message);
+                Toast.error(err.message || 'Registration failed. Please try again.');
+                btn.classList.remove('loading');
+                btn.disabled = false;
+            }
+        });
+
+        async function resendVerification() {
+            const btn = document.getElementById('resend-btn');
+            btn.disabled = true;
+            try {
+                if (typeof Auth === 'undefined') throw new Error('Unable to connect to authentication service.');
+                await Auth.resendVerification(registeredEmail);
+                Toast.success('Verification email sent! Check your inbox.');
+            } catch (err) {
+                Toast.error(err.message || 'Failed to resend. Please try again.');
+            }
+            btn.disabled = false;
+        }
+
+        (async () => {
+            try {
+                if (typeof Auth !== 'undefined') {
+                    await Auth.init();
+                    if (Auth.isAuth()) window.location.replace('../index.html');
+                }
+            } catch (e) { console.error('[Register] Init error:', e); }
+        })();
+    </script>
+</body>
+</html>
