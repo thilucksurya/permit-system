@@ -37,38 +37,6 @@ permit-system/
 
 ---
 
-## 🚀 Local Setup
-
-**Prerequisites:** A modern web browser and a Supabase account (free tier is sufficient).
-
-**Step 1 — Clone the repository**
-```bash
-git clone https://github.com/thilucksurya/permit-system.git
-cd permit-system
-```
-
-**Step 2 — Configure Supabase**
-1. Create a project at [supabase.com](https://supabase.com)
-2. Run the schema from `db/schema.sql` in the Supabase SQL editor
-3. Run the stored functions from `sql/functions.sql`
-4. Copy your Project URL and anon key
-
-**Step 3 — Add environment config**
-
-Create `js/config.js`:
-```javascript
-const SUPABASE_URL = 'your-project-url';
-const SUPABASE_KEY = 'your-anon-key';
-```
-
-**Step 4 — Open locally**
-```bash
-# Use any local server — e.g., VS Code Live Server
-# Or open index.html directly in browser
-```
-
----
-
 ## 📌 Key Technical Decisions
 
 **Why PL/pgSQL stored functions instead of client-side validation only?**
@@ -89,6 +57,3 @@ Static hosting (GitHub Pages) is zero-cost, infinitely scalable, and has no serv
 
 ---
 
-## 📄 License
-
-MIT License — see [LICENSE](LICENSE) for details.
